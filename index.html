@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Blueprint.sh — draw any codebase</title>
+  <meta name="description" content="Drop a JavaScript, TypeScript or Python project in and get its architecture drawn: folders, imports, cycles, entry points. Runs entirely in your browser.">
+  <link rel="icon" href="./brand/mark.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/big-shoulders-display-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./src/style.css">
+  <script>
+    try { const t = localStorage.getItem('bp-theme'); if (t) document.documentElement.dataset.theme = t; } catch {}
+  </script>
+</head>
+<body data-view="intake">
+  <header class="bar">
+    <a class="logo" href="./" aria-label="Blueprint.sh home">
+      <img class="logo-dark" src="./brand/wordmark-dark.svg" alt="Blueprint.sh" height="30">
+      <img class="logo-light" src="./brand/wordmark-light.svg" alt="" height="30">
+    </a>
+    <div class="tools" id="tools" hidden>
+      <span class="project" id="project-name"></span>
+      <div class="seg" role="radiogroup" aria-label="Drawing level">
+        <button type="button" role="radio" data-mode="files" aria-checked="true">Files</button>
+        <button type="button" role="radio" data-mode="folders" aria-checked="false">Folders</button>
+      </div>
+      <label class="depth" id="depth-wrap" hidden>Depth
+        <select id="depth"><option>1</option><option>2</option><option>3</option><option>4</option></select>
+      </label>
+      <label class="check"><input type="checkbox" id="opt-tests"> Tests</label>
+      <label class="check"><input type="checkbox" id="opt-types"> Type imports</label>
+      <button type="button" class="icon-btn" id="flip" title="Flip direction" aria-label="Flip drawing direction">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7h12l-3-3M17 13H5l3 3" /></svg>
+      </button>
+      <form class="search" id="search-form" role="search">
+        <input id="search" list="node-list" placeholder="Find a file  /" aria-label="Find a file" autocomplete="off">
+        <datalist id="node-list"></datalist>
+      </form>
+      <details class="menu" id="export">
+        <summary>Export</summary>
+        <div class="menu-list">
+          <button type="button" data-export="svg">SVG drawing</button>
+          <button type="button" data-export="png">PNG, 2×</button>
+          <button type="button" data-export="mermaid">Mermaid</button>
+          <button type="button" data-export="json">Graph JSON</button>
+        </div>
+      </details>
+      <button type="button" class="ghost-btn" id="new">New sheet</button>
+    </div>
+    <button type="button" class="icon-btn theme" id="theme" aria-label="Switch between cyanotype and whiteprint">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="M10 3.5v13a6.5 6.5 0 0 0 0-13Z" class="fill"/></svg>
+    </button>
+  </header>
+
+  <main>
+    <section class="intake" id="intake" aria-labelledby="intake-title">
+      <div class="intake-copy">
+        <p class="kicker">Sheet 00 · awaiting subject</p>
+        <h1 id="intake-title">Drop a codebase.<br>Get the drawing.</h1>
+        <p class="lede">Blueprint.sh reads every import in a JavaScript, TypeScript or Python project and drafts how the modules connect: folders, cycles, entry points, hotspots. It all happens in this tab. Your code is never uploaded.</p>
+      </div>
+
+      <div class="drop" id="drop" tabindex="-1">
+        <span class="reg tl" aria-hidden="true"></span><span class="reg tr" aria-hidden="true"></span>
+        <span class="reg bl" aria-hidden="true"></span><span class="reg br" aria-hidden="true"></span>
+        <p class="drop-title">Drop a project folder here</p>
+        <p class="drop-sub">or</p>
+        <button type="button" class="solid-btn" id="pick">Choose a folder</button>
+        <p class="drop-note">node_modules, build output and virtualenvs are skipped before anything is read.</p>
+      </div>
+
+      <form class="gh" id="gh-form">
+        <label for="gh-url">Or a public GitHub repository</label>
+        <div class="gh-row">
+          <input id="gh-url" inputmode="url" placeholder="github.com/expressjs/express" autocomplete="off" spellcheck="false" required>
+          <button type="submit" class="solid-btn">Draw</button>
+        </div>
+        <p class="gh-try">Try <button type="button" class="link" data-repo="expressjs/express">expressjs/express</button>,
+          <button type="button" class="link" data-repo="pallets/flask">pallets/flask</button>, or
+          <button type="button" class="link" id="sample">draw Blueprint.sh itself</button>.</p>
+      </form>
+      <p class="error" id="error" role="alert" hidden></p>
+    </section>
+
+    <section class="board" id="board" hidden>
+      <div class="canvas" id="canvas"></div>
+
+      <aside class="notes" id="notes" aria-label="Field notes"></aside>
+
+      <aside class="spec" id="spec" aria-label="Module spec sheet" hidden></aside>
+
+      <div class="zoom" role="group" aria-label="Zoom">
+        <button type="button" class="icon-btn" data-zoom="in" aria-label="Zoom in"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg></button>
+        <button type="button" class="icon-btn" data-zoom="out" aria-label="Zoom out"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12"/></svg></button>
+        <button type="button" class="icon-btn" data-zoom="fit" aria-label="Fit drawing"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>
+      </div>
+
+      <dl class="legend" aria-label="Legend">
+        <div><dt><svg viewBox="0 0 28 8"><path d="M1 4h26"/></svg></dt><dd>import</dd></div>
+        <div><dt><svg viewBox="0 0 28 8"><path d="M1 4h26" stroke-dasharray="6 4"/></svg></dt><dd>lazy import()</dd></div>
+        <div><dt><svg viewBox="0 0 28 8"><path d="M1 4h26" stroke-dasharray="1.5 3"/></svg></dt><dd>type only</dd></div>
+        <div><dt><svg viewBox="0 0 28 8"><path d="M1 4h26" class="red"/></svg></dt><dd>cycle</dd></div>
+        <div><dt><svg viewBox="0 0 28 8"><path d="M1 1h7L1 8z" class="solid"/></svg></dt><dd>entry point</dd></div>
+        <div><dt><svg viewBox="0 0 28 8"><rect x="1" y="5" width="16" height="3" class="solid"/></svg></dt><dd>imported by many</dd></div>
+      </dl>
+    </section>
+
+    <table class="titleblock" id="titleblock" aria-label="Drawing details">
+      <tr><th>Project</th><td colspan="3" id="tb-project">—</td></tr>
+      <tr><th>Sheet</th><td id="tb-sheet">00</td><th>Scale</th><td id="tb-scale">—</td></tr>
+      <tr><th>Files</th><td id="tb-files">—</td><th>Imports</th><td id="tb-edges">—</td></tr>
+      <tr><th>Cycles</th><td id="tb-cycles">—</td><th>Date</th><td id="tb-date"></td></tr>
+      <tr><th>Drawn by</th><td colspan="3" class="tb-by">Blueprint.sh</td></tr>
+    </table>
+
+    <div class="drafting" id="drafting" hidden aria-live="polite">
+      <svg class="plotter" viewBox="0 0 120 60" aria-hidden="true"><path d="M6 30h22v-16h26v32h26v-20h34"/></svg>
+      <p id="drafting-text">Drafting…</p>
+    </div>
+  </main>
+
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
