@@ -1,0 +1,4 @@
+node_modules/
+docs/PLAN.md
+dist/
+public/sample.json
