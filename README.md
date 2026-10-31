@@ -7,7 +7,7 @@ JavaScript, TypeScript and Python. Parsing, layout and rendering all happen in y
 
 Architecture diagrams in docs go stale the week they are drawn. Blueprint.sh draws the real one from the imports: folders become drafting frames, modules become parts, every import becomes a routed line, and import cycles are marked in red pencil.
 
-<p align="center"><img src="docs/screens/spec-sheet.png" alt="Blueprint.sh drawing its own source, with the spec sheet for python.ts open" width="860"></p>
+<p align="center"><img src="docs/screens/spec-sheet.png" alt="Blueprint.sh drawing its own source in the cyanotype theme, with the field notes and title block" width="860"></p>
 
 ## What it does
 
@@ -19,13 +19,13 @@ Architecture diagrams in docs go stale the week they are drawn. Blueprint.sh dra
 - **Stays readable on big repos.** When a file-level sheet would be too small to read, it falls back to the deepest folder level that fits on one sheet. It lays out both directions when the fit is poor and keeps the better one.
 - **Exports** SVG, 2× PNG, Mermaid and the full graph as JSON.
 
-<p align="center"><img src="docs/screens/flask-folders.png" alt="pallets/flask at folder level; examples/javascript and src/flask are flagged for import cycles" width="860"></p>
+<p align="center"><img src="docs/screens/flask-folders.png" alt="Blueprint.sh at folder level: each folder a box with a dimension line stating its size" width="860"></p>
 
 ## Design: a drafting office
 
 Every project gets a **title block** (project, sheet, scale, date, files, imports, cycles, drawn by). The scale is real: it tracks your zoom. Folders carry dimension lines that state their size, and lines are styled by import kind: solid for static, dashed for `import()`, dotted for type-only, red for a cycle. **Cyanotype** is white on Prussian blue. **Whiteprint** is the diazo copy, blue ink on cream stock. Type is Big Shoulders Display for lettering, Overpass for the interface and Overpass Mono for paths.
 
-<p align="center"><img src="docs/screens/whiteprint.png" alt="expressjs/express in the whiteprint theme" width="860"></p>
+<p align="center"><img src="docs/screens/whiteprint.png" alt="The same drawing in the whiteprint theme" width="860"></p>
 
 ## Run it
 
