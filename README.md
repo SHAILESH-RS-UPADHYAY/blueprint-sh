@@ -3,6 +3,11 @@
 <p align="center"><b>Drop a codebase in. Get its architecture drawn.</b><br>
 JavaScript, TypeScript and Python. Parsing, layout and rendering all happen in your browser, so your code is never uploaded.</p>
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/readme/drafting-dark.svg">
+  <img src="docs/readme/drafting-light.svg" width="100%" alt="Blueprint.sh in motion: the folder is read file by file, then the sheet lays out modules, draws their imports, finds one cycle and fills the title block.">
+</picture>
+
 ---
 
 Architecture diagrams in docs go stale the week they are drawn. Blueprint.sh draws the real one from the imports: folders become drafting frames, modules become parts, every import becomes a routed line, and import cycles are marked in red pencil.
