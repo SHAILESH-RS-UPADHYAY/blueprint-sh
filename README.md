@@ -33,10 +33,11 @@ Every project gets a **title block** (project, sheet, scale, date, files, import
 npm install
 npm run dev        # snapshots this repo as the built-in sample, then starts Vite
 npm test           # parsers, resolver, graph metrics, GitHub source (node:test, native TS)
-npm run build      # sample + typecheck + production build into dist/
+npm run build      # sample + typecheck + production build into .cloudflare/output/v0/
+npm run deploy     # the same build, shipped as a Cloudflare Worker with static assets
 ```
 
-Requires Node 22.18 or newer, because the tests run TypeScript directly. Deploy `dist/` to any static host.
+Requires Node 22.18 or newer, because the tests run TypeScript directly. Deploying needs a Cloudflare login once: `npx cf auth login`. The site is static, so `.cloudflare/output/v0/workers/default/assets/` also works on any static host.
 
 ## Layout
 
