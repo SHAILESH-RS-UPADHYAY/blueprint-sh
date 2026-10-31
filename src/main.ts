@@ -44,13 +44,13 @@ function showIntake() {
 }
 
 function setTitleBlock(g: Graph | null) {
-  $('tb-project').textContent = g?.root ?? '—';
+  $('tb-project').textContent = g?.root ?? 'None yet';
   $('tb-sheet').textContent = g ? '01 / 01' : '00';
-  $('tb-files').textContent = g ? num(g.files.length) : '—';
-  $('tb-edges').textContent = g ? num(g.edges.length) : '—';
-  $('tb-cycles').textContent = g ? String(g.cycles.length) : '—';
+  $('tb-files').textContent = g ? num(g.files.length) : '0';
+  $('tb-edges').textContent = g ? num(g.edges.length) : '0';
+  $('tb-cycles').textContent = g ? String(g.cycles.length) : '0';
   $('tb-cycles').classList.toggle('bad', !!g?.cycles.length);
-  if (!g) $('tb-scale').textContent = '—';
+  if (!g) $('tb-scale').textContent = 'None';
   $('tb-date').textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
 }
 
@@ -71,11 +71,21 @@ async function open(load: () => Promise<{ root: string; sources: Source[] } | nu
     autoMode = opts.mode === 'files';
     opts.depth = opts.mode === 'folders' ? readableDepth(g) : suggestDepth(g);
     ($('depth') as HTMLSelectElement).value = String(Math.min(opts.depth, 4));
-    showBoard();
+    await swap(showBoard);
     await redraw();
   } catch (err) {
     fail(err instanceof GithubError ? err.message : `Something went wrong while reading the project: ${(err as Error).message}`);
   }
+}
+
+// A new sheet crossfades in where the browser supports view transitions.
+function swap(change: () => void): Promise<void> {
+  const d = document as Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } };
+  if (!d.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    change();
+    return Promise.resolve();
+  }
+  return d.startViewTransition(change).finished.catch(() => {});
 }
 
 function showBoard() {
@@ -167,7 +177,7 @@ function renderNotes() {
   const testIds = new Set(g.files.filter((f) => f.test).map((f) => f.id));
   const unresolved = g.unresolved.filter((u) => !testIds.has(u.from));
   const hot = [...g.files].filter((f) => f.fanIn > 1).sort((a, b) => b.fanIn - a.fanIn).slice(0, 6);
-  const item = (id: string, right: string, cls = '') => `<li><button type="button" data-goto="${esc(id)}"><span class="${cls}">${esc(id)}</span><span class="n">${esc(right)}</span></button></li>`;
+  const item = (id: string, right: string, cls = '') => `<li><button type="button" data-goto="${esc(id)}" title="${esc(id)}"><span class="${cls}">${esc(id)}</span><span class="n">${esc(right)}</span></button></li>`;
   $('notes').innerHTML = `
     <h2>Field notes</h2>
     <div class="tally">
@@ -177,7 +187,7 @@ function renderNotes() {
     </div>
     ${g.cycles.length ? `<h3>Import cycles</h3><ul>${g.cycles.slice(0, 6).map((c) => item(c[0], `${c.length} files`, 'cyc')).join('')}</ul>` : '<h3>Import cycles</h3><p>None. Every import points one way.</p>'}
     ${hot.length ? `<h3>Most imported</h3><ul>${hot.map((f) => item(f.id, `${f.fanIn}×`)).join('')}</ul>` : ''}
-    ${g.externals.length ? `<h3>Packages</h3><p>${g.externals.slice(0, 14).map((x) => `${esc(x.name)} <span class="n">${x.count}</span>`).join(' · ')}${g.externals.length > 14 ? ` · +${g.externals.length - 14}` : ''}</p>` : ''}
+    ${g.externals.length ? `<h3>Packages</h3><p>${g.externals.slice(0, 14).map((x) => `${esc(x.name)} <span class="n">${x.count}</span>`).join(', ')}${g.externals.length > 14 ? `, and ${g.externals.length - 14} more` : ''}</p>` : ''}
     ${unresolved.length ? `<h3>Unresolved</h3><ul>${unresolved.slice(0, 5).map((u) => item(u.from, `'${u.spec}'`)).join('')}</ul>` : ''}
     ${g.skipped.length ? `<h3>Skipped</h3><p>${g.skipped.length} file${g.skipped.length > 1 ? 's' : ''}: ${esc(g.skipped.slice(0, 3).map((s) => `${s.path} (${s.reason})`).join('; '))}${g.skipped.length > 3 ? '…' : ''}</p>` : ''}`;
 }
@@ -204,11 +214,11 @@ function select(id: string | null) {
   const outs = graph.edges.filter((e) => e.from === id);
   const ins = graph.edges.filter((e) => e.to === id);
   const row = (target: string, kind: string, line?: number) =>
-    `<li><button type="button" data-goto="${esc(target)}"><span>${esc(target)}</span><span class="kind">${kind}${line ? ` · L${line}` : ''}</span></button></li>`;
+    `<li><button type="button" data-goto="${esc(target)}" title="${esc(target)}"><span>${esc(target)}</span><span class="kind">${kind}${line ? `, line ${line}` : ''}</span></button></li>`;
   const cycle = f.cycle >= 0 ? graph.cycles[f.cycle] : null;
   spec.innerHTML = `
     <div class="spec-head"><h2>${esc(f.name)}</h2>${closeBtn}</div>
-    <p class="path">${esc(f.id)}${f.test ? ' · test' : ''}</p>
+    <p class="path">${esc(f.id)}${f.test ? ' (test)' : ''}</p>
     <dl><div><dt>Loc</dt><dd>${num(f.loc)}</dd></div><div><dt>In</dt><dd>${f.fanIn}</dd></div><div><dt>Out</dt><dd>${f.fanOut}</dd></div><div><dt>Lang</dt><dd>${f.lang.toUpperCase()}</dd></div></dl>
     ${cycle ? `<p class="warn">In an import cycle with ${cycle.length - 1} other file${cycle.length > 2 ? 's' : ''}: ${esc(cycle.filter((c) => c !== id).slice(0, 3).join(', '))}${cycle.length > 4 ? '…' : ''}</p>` : ''}
     <h3>Imports</h3>${outs.length ? `<ul>${outs.map((e) => row(e.to, e.kind, e.line)).join('')}</ul>` : '<p class="empty">No local imports.</p>'}
@@ -275,13 +285,23 @@ const openSample = () => {
   }, 'Unrolling the sample sheet');
 };
 $('sample').addEventListener('click', openSample);
+document.querySelector('[data-open-sample]')?.addEventListener('click', openSample);
+
+/* The intake's plate: this repository's own sheet, laid out at build time and plotted here. */
+fetch('/sample-sheet.json')
+  .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+  .then((s: { scene: Scene; layout: LayoutResult; files: number; imports: number }) => {
+    $('plate-stats').textContent = `${s.files} modules and ${s.imports} imports`;
+    draw($('sample-plate'), s.scene, s.layout, { interactive: false, onSelect: () => {}, onScale: () => {}, insets: () => ({ left: 24, right: 24, top: 32, bottom: 24 }) });
+  })
+  .catch(() => document.querySelector('.plate')?.setAttribute('hidden', ''));
 
 for (const b of document.querySelectorAll<HTMLButtonElement>('.seg button')) b.addEventListener('click', () => { opts.mode = b.dataset.mode as SceneOptions['mode']; syncControls(); void redraw(); });
 $('depth').addEventListener('change', (e) => { opts.depth = Number((e.target as HTMLSelectElement).value); void redraw(); });
 $('opt-tests').addEventListener('change', (e) => { opts.tests = (e.target as HTMLInputElement).checked; void redraw(); });
 $('opt-types').addEventListener('change', (e) => { opts.types = (e.target as HTMLInputElement).checked; void redraw(); });
 $('flip').addEventListener('click', () => { userFlipped = true; direction = direction === 'RIGHT' ? 'DOWN' : 'RIGHT'; void redraw(); });
-$('new').addEventListener('click', () => { history.replaceState(null, '', location.pathname); graph = null; drawing?.destroy(); drawing = null; $('canvas').replaceChildren(); showIntake(); });
+$('new').addEventListener('click', () => { history.replaceState(null, '', location.pathname); graph = null; drawing?.destroy(); drawing = null; $('canvas').replaceChildren(); void swap(showIntake); });
 $('search-form').addEventListener('submit', (e) => {
   e.preventDefault();
   const q = ($('search') as HTMLInputElement).value.trim().toLowerCase();
@@ -326,8 +346,11 @@ addEventListener('keydown', (e) => {
 $('theme').addEventListener('click', () => {
   const root = document.documentElement;
   const dark = root.dataset.theme ? root.dataset.theme === 'dark' : !matchMedia('(prefers-color-scheme: light)').matches;
-  root.dataset.theme = dark ? 'light' : 'dark';
-  try { localStorage.setItem('bp-theme', root.dataset.theme); } catch { /* private mode */ }
+  const next = dark ? 'light' : 'dark';
+  // The other print develops over this one, top to bottom.
+  root.classList.add('vt-print');
+  void swap(() => { root.dataset.theme = next; }).then(() => root.classList.remove('vt-print'));
+  try { localStorage.setItem('bp-theme', next); } catch { /* private mode */ }
 });
 
 /* Shareable links: #gh=owner/repo or #sample */
