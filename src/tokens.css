@@ -1,0 +1,48 @@
+@font-face { font-family: "Big Shoulders Display"; font-weight: 800; font-display: swap; src: url("/fonts/big-shoulders-display-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Overpass"; font-weight: 400; font-display: swap; src: url("/fonts/overpass-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Overpass"; font-weight: 600; font-display: swap; src: url("/fonts/overpass-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Overpass Mono"; font-weight: 400; font-display: swap; src: url("/fonts/overpass-mono-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Overpass Mono"; font-weight: 600; font-display: swap; src: url("/fonts/overpass-mono-latin-600-normal.woff2") format("woff2"); }
+
+/* Cyanotype: white lines on Prussian blue, the default sheet. */
+:root {
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.2rem; --text-xl: 1.44rem; --text-2xl: 1.728rem; --text-3xl: 2.074rem;
+  --text-display-s: 1.44rem; --text-display: 1.728rem; --text-section: 1.2rem; --text-title: 1rem; --text-lead: 1rem;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
+  --color-error: oklch(72% 0.17 28); --color-success: oklch(80% 0.12 160);
+  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
+  --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
+  --color-paper: oklch(29.1% 0.076 253.5); --color-paper-2: oklch(33% 0.086 253.3); --color-paper-3: oklch(37.1% 0.095 252.4);
+  --color-ink: oklch(96.5% 0.018 245.4); --color-ink-2: oklch(82% 0.035 248); --color-muted: oklch(64% 0.055 250);
+  --color-rule: oklch(45% 0.07 252);
+  --color-accent: oklch(72% 0.17 28); --color-accent-ink: oklch(29.1% 0.076 253.5); --color-focus: oklch(74% 0.19 28);
+  --color-grid-minor: oklch(33.5% 0.08 253); --color-grid-major: oklch(39% 0.085 253);
+  --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif; --font-body: "Overpass", ui-sans-serif, system-ui, sans-serif; --font-outlier: "Overpass Mono", ui-monospace, monospace;
+  --radius-card: 2px; --radius-pill: 999px; --rule-hair: 1px; --shadow-card: none;
+  --tracking-display: 0em;
+  color-scheme: dark;
+}
+
+/* Whiteprint: the diazo copy, blue ink on cream stock. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --color-paper: oklch(95.8% 0.012 91.5); --color-paper-2: oklch(92.8% 0.018 89.4); --color-paper-3: oklch(89.5% 0.024 90.8);
+    --color-ink: oklch(42.8% 0.114 255.4); --color-ink-2: oklch(50% 0.085 255); --color-muted: oklch(62% 0.06 255);
+    --color-rule: oklch(80% 0.05 255);
+    --color-accent: oklch(52% 0.18 29); --color-accent-ink: oklch(95.8% 0.012 91.5); --color-focus: oklch(52% 0.2 29);
+    --color-grid-minor: oklch(92% 0.022 240); --color-grid-major: oklch(87% 0.035 248);
+    --color-error: oklch(52% 0.18 29); --color-success: oklch(45% 0.1 160);
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --color-paper: oklch(95.8% 0.012 91.5); --color-paper-2: oklch(92.8% 0.018 89.4); --color-paper-3: oklch(89.5% 0.024 90.8);
+  --color-ink: oklch(42.8% 0.114 255.4); --color-ink-2: oklch(50% 0.085 255); --color-muted: oklch(62% 0.06 255);
+  --color-rule: oklch(80% 0.05 255);
+  --color-accent: oklch(52% 0.18 29); --color-accent-ink: oklch(95.8% 0.012 91.5); --color-focus: oklch(52% 0.2 29);
+  --color-grid-minor: oklch(92% 0.022 240); --color-grid-major: oklch(87% 0.035 248);
+  --color-error: oklch(52% 0.18 29); --color-success: oklch(45% 0.1 160);
+  color-scheme: light;
+}
