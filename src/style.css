@@ -267,8 +267,7 @@ body[data-view="drawing"] main { background-image: none; }
 .notes .n { color: var(--color-ink-2); flex: none; }
 .notes li button > span:first-child, .spec li button > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .notes .cyc { color: var(--color-accent); }
-.notes p { overflow-wrap: anywhere; }
-.notes p { color: var(--color-ink-2); font-size: var(--text-sm); }
+.notes p { color: var(--color-ink-2); font-size: var(--text-sm); overflow-wrap: anywhere; }
 .notes .switched { margin: 0 0 var(--space-sm); padding: var(--space-xs) var(--space-sm); border: 1px solid var(--color-rule); border-radius: var(--radius-card); background: var(--color-paper-2); }
 /* Figures part with hairlines, never boxed inside the panel. */
 .tally { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 var(--space-2xs); }
