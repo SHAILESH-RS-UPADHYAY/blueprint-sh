@@ -16,7 +16,7 @@ function walk(dir: string) {
     const full = join(dir, name);
     const path = relative(root, full).split(sep).join('/');
     if (statSync(full).isDirectory()) {
-      if (!['node_modules', 'dist', 'public', '.git', '.hallmark'].includes(name)) walk(full);
+      if (!['node_modules', 'dist', 'public', '.git', '.hallmark', '.cloudflare', '.wrangler'].includes(name)) walk(full);
     } else if (isWanted(path)) {
       sources.push({ path, text: readFileSync(full, 'utf8') });
     }

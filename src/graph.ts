@@ -10,7 +10,7 @@ const LANG: Record<string, Lang> = {
   ts: 'ts', tsx: 'ts', mts: 'ts', cts: 'ts', js: 'js', jsx: 'js', mjs: 'js', cjs: 'js', vue: 'vue', svelte: 'svelte', py: 'py',
 };
 const IGNORED = new Set(['node_modules', '.git', 'dist', 'build', 'out', '.next', '.nuxt', '.svelte-kit', '.output', '.turbo',
-  '.vercel', '.cache', 'coverage', '__pycache__', '.venv', 'venv', 'env', '.tox', '.mypy_cache', '.pytest_cache', 'target',
+  '.vercel', '.cloudflare', '.wrangler', '.cache', 'coverage', '__pycache__', '.venv', 'venv', 'env', '.tox', '.mypy_cache', '.pytest_cache', 'target',
   'vendor', 'bower_components', 'site-packages', 'storybook-static', '.idea', '.vscode']);
 const TEST = /(^|\/)(__tests__|__mocks__|tests?|spec|e2e)\/|\.(test|spec|stories|e2e)\.[^/]+$|(^|\/)(test_[^/]+|[^/]+_test|conftest)\.py$/;
 const CONFIG = /(^|\/)(tsconfig[\w.-]*|jsconfig)\.json$/;
