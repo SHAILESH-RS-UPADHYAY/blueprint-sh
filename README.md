@@ -1,4 +1,4 @@
-<p align="center"><img src="brand/wordmark-light.svg" alt="Blueprint.sh" height="56"></p>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="brand/wordmark-dark.svg"><img src="brand/wordmark-light.svg" alt="Blueprint.sh" height="56"></picture></p>
 
 <p align="center"><b>Drop a codebase in. Get its architecture drawn.</b><br>
 JavaScript, TypeScript and Python. Parsing, layout and rendering all happen in your browser, so your code is never uploaded.</p>
