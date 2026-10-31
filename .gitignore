@@ -14,3 +14,5 @@ public/sample-sheet.json
 
 # render-tier output in subfolders
 /*/**/.hallmark/
+
+.vercel
