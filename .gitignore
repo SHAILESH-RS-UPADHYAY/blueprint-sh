@@ -2,3 +2,15 @@ node_modules/
 docs/PLAN.md
 dist/
 public/sample.json
+public/sample-sheet.json
+.cloudflare/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+
+# render-tier output in subfolders
+/*/**/.hallmark/
