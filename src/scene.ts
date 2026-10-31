@@ -20,7 +20,7 @@ export function buildScene(g: Graph, o: SceneOptions): Scene {
       mode: 'folders',
       nodes: v.nodes.map((n) => ({
         id: n.id, group: parent(n.id), label: n.id === '·' ? '(root files)' : `${n.id.split('/').pop()}/`,
-        sub: `${n.files} ${n.files === 1 ? 'file' : 'files'} · ${n.loc.toLocaleString('en-US')} loc`,
+        sub: `${n.files} ${n.files === 1 ? 'file' : 'files'}, ${n.loc.toLocaleString('en-US')} loc`,
         cycle: n.cycle, weight: n.files, test: false, entry: false,
       })),
       edges: v.edges.map((e) => ({ from: e.from, to: e.to, kind: 'static', cycle: e.cycle, count: e.count })),
