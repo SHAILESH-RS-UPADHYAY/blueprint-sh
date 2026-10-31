@@ -13,13 +13,16 @@
     "preview": "vite preview",
     "sample": "node scripts/sample.ts",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.node.json",
-    "test": "node --test \"src/**/*.test.ts\""
+    "test": "node --test \"src/**/*.test.ts\"",
+    "deploy": "npm run sample && npm run typecheck && cf deploy"
   },
   "dependencies": {
     "elkjs": "0.12.0"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "2.0.0-beta.v.8",
     "@types/node": "^25.9.9",
+    "cf": "1.0.0-beta.26",
     "typescript": "6.0.3",
     "vite": "8.3.4"
   },
