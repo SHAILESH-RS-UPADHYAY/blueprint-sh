@@ -1,0 +1,5 @@
+# Vite fingerprints everything under /assets/, and the font files are named by family and weight.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
