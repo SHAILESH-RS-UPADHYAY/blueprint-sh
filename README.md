@@ -8,6 +8,13 @@ JavaScript, TypeScript and Python. Parsing, layout and rendering all happen in y
   <img src="docs/readme/drafting-light.svg" width="100%" alt="Blueprint.sh in motion: the folder is read file by file, then the sheet lays out modules, draws their imports, finds one cycle and fills the title block.">
 </picture>
 
+<picture>
+  <source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="https://shailesh-stats.vercel.app/api/plate?name=repo&amp;repo=blueprint-sh&amp;theme=dark&amp;w=m">
+  <source media="(max-width: 600px)" srcset="https://shailesh-stats.vercel.app/api/plate?name=repo&amp;repo=blueprint-sh&amp;theme=light&amp;w=m">
+  <source media="(prefers-color-scheme: dark)" srcset="https://shailesh-stats.vercel.app/api/plate?name=repo&amp;repo=blueprint-sh&amp;theme=dark">
+  <img src="https://shailesh-stats.vercel.app/api/plate?name=repo&amp;repo=blueprint-sh&amp;theme=light" width="100%" alt="Commits per week and languages for Blueprint.sh, drawn live from GitHub.">
+</picture>
+
 ---
 
 Architecture diagrams in docs go stale the week they are drawn. Blueprint.sh draws the real one from the imports: folders become drafting frames, modules become parts, every import becomes a routed line, and import cycles are marked in red pencil.
